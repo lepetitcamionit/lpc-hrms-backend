@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/", createRole);
 router.get("/:id", getRole);
 router.get("/", getAllRoles);
-router.put("/:id", updateRole);
+router.patch("/:id", updateRole);
 router.delete("/:id", deleteRole);
 
 module.exports = router;

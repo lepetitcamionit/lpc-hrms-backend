@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/", createAttendance);
 router.get("/:id", getAttendance);
 router.get("/", getAllAttendances);
-router.put("/:id", updateAttendance);
+router.patch("/:id", updateAttendance);
 router.delete("/:id", deleteAttendance);
 
 module.exports = router;

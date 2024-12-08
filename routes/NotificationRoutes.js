@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/", createNotification);
 router.get("/:id", getNotification);
 router.get("/", getAllNotifications);
-router.put("/:id", updateNotification);
+router.patch("/:id", updateNotification);
 router.delete("/:id", deleteNotification);
 
 module.exports = router;

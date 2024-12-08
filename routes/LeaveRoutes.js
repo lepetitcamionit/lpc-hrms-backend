@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/", createLeave);
 router.get("/:id", getLeave);
 router.get("/", getAllLeaves);
-router.put("/:id", updateLeave);
+router.patch("/:id", updateLeave);
 router.delete("/:id", deleteLeave);
 
 module.exports = router;

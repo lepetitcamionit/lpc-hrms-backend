@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/", createShiftSchedule);
 router.get("/:id", getShiftSchedule);
 router.get("/", getAllShiftSchedules);
-router.put("/:id", updateShiftSchedule);
+router.patch("/:id", updateShiftSchedule);
 router.delete("/:id", deleteShiftSchedule);
 
 module.exports = router;

@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/", createShift);
 router.get("/:id", getShift);
 router.get("/", getAllShifts);
-router.put("/:id", updateShift);
+router.patch("/:id", updateShift);
 router.delete("/:id", deleteShift);
 
 module.exports = router;
