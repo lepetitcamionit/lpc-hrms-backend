@@ -1,5 +1,4 @@
 const leaveSchema = new Schema({
-  leaveId: { type: String, required: true, unique: true },
   employeeId: { type: String, required: true, ref: "User" },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },

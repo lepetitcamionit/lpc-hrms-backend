@@ -1,8 +1,7 @@
 const shiftSchema = new Schema({
   shiftId: { type: String, required: true, unique: true },
-  shiftName: { type: String, required: true },
-  startTime: { type: String, required: true }, // Example: "09:00"
-  endTime: { type: String, required: true }, // Example: "17:00"
+  startTime: { type: String, required: true },
+  endTime: { type: String, required: true },
   branchId: { type: String, required: true, ref: "Branch" },
 });
 

@@ -1,5 +1,4 @@
 const payrollSchema = new Schema({
-  payrollId: { type: String, required: true, unique: true },
   employeeId: { type: String, required: true, ref: "User" },
   salary: { type: Number, required: true },
   overtime: { type: Number, default: 0 },

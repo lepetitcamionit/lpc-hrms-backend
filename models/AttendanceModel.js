@@ -1,5 +1,4 @@
 const attendanceSchema = new Schema({
-  attendanceId: { type: String, required: true, unique: true },
   employeeId: { type: String, required: true, ref: "User" },
   date: { type: Date, required: true },
   checkInTime: { type: String },
