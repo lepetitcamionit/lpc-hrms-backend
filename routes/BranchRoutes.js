@@ -1,4 +1,6 @@
 const express = require("express");
+const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
+
 const {
   createBranch,
   getBranch,
@@ -9,10 +11,25 @@ const {
 
 const router = express.Router();
 
-router.post("/", createBranch);
-router.get("/:id", getBranch);
-router.get("/", getAllBranches);
-router.patch("/:id", updateBranch);
-router.delete("/:id", deleteBranch);
+router.post(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  createBranch
+);
+router.get("/:id", isAuthenticatedUser, getBranch);
+router.get("/", isAuthenticatedUser, getAllBranches);
+router.patch(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  updateBranch
+);
+router.delete(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  deleteBranch
+);
 
 module.exports = router;

@@ -1,4 +1,6 @@
 const express = require("express");
+const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
+
 const {
   createShift,
   getShift,
@@ -9,10 +11,35 @@ const {
 
 const router = express.Router();
 
-router.post("/", createShift);
-router.get("/:id", getShift);
-router.get("/", getAllShifts);
-router.patch("/:id", updateShift);
-router.delete("/:id", deleteShift);
+router.post(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  createShift
+);
+router.get(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  getShift
+);
+router.get(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  getAllShifts
+);
+router.patch(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  updateShift
+);
+router.delete(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  deleteShift
+);
 
 module.exports = router;

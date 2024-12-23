@@ -1,4 +1,6 @@
 const express = require("express");
+const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
+
 const {
   createNotification,
   getNotification,
@@ -9,10 +11,25 @@ const {
 
 const router = express.Router();
 
-router.post("/", createNotification);
-router.get("/:id", getNotification);
-router.get("/", getAllNotifications);
-router.patch("/:id", updateNotification);
-router.delete("/:id", deleteNotification);
+router.post(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  createNotification
+);
+router.get("/:id", isAuthenticatedUser, getNotification);
+router.get("/", isAuthenticatedUser, getAllNotifications);
+router.patch(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  updateNotification
+);
+router.delete(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  deleteNotification
+);
 
 module.exports = router;

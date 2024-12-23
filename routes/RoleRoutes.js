@@ -11,10 +11,35 @@ const {
 
 const router = express.Router();
 
-router.post("/", createRole);
-router.get("/:id", getRole);
-router.get("/", isAuthenticatedUser, getAllRoles);
-router.patch("/:id", updateRole);
-router.delete("/:id", deleteRole);
+router.post(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  createRole
+);
+router.get(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  getRole
+);
+router.get(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  getAllRoles
+);
+router.patch(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  updateRole
+);
+router.delete(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  deleteRole
+);
 
 module.exports = router;

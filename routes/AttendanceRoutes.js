@@ -1,4 +1,6 @@
 const express = require("express");
+const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
+
 const {
   createAttendance,
   getAttendance,
@@ -10,11 +12,30 @@ const {
 
 const router = express.Router();
 
-router.post("/", createAttendance);
-router.get("/:id", getAttendance);
-router.get("/employee/:employeeId", getAttendaceByEmployee);
-router.get("/", getAllAttendances);
-router.patch("/:id", updateAttendance);
-router.delete("/:id", deleteAttendance);
+router.post("/", isAuthenticatedUser, createAttendance);
+router.get("/:id", isAuthenticatedUser, getAttendance);
+router.get(
+  "/employee/:employeeId",
+  isAuthenticatedUser,
+  getAttendaceByEmployee
+);
+router.get(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  getAllAttendances
+);
+router.patch(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  updateAttendance
+);
+router.delete(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  deleteAttendance
+);
 
 module.exports = router;
