@@ -1,4 +1,6 @@
 const express = require("express");
+const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
+
 const {
   createRole,
   getRole,
@@ -11,7 +13,7 @@ const router = express.Router();
 
 router.post("/", createRole);
 router.get("/:id", getRole);
-router.get("/", getAllRoles);
+router.get("/", isAuthenticatedUser, getAllRoles);
 router.patch("/:id", updateRole);
 router.delete("/:id", deleteRole);
 

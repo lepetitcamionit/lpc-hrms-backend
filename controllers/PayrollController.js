@@ -2,7 +2,25 @@ const Payroll = require("../models/PayrollModel");
 
 exports.createPayroll = async (req, res) => {
   try {
-    const payroll = await Payroll.create(req.body);
+    const {
+      salary,
+      overtime = 0,
+      deductions = 0,
+      paymentDate,
+      employeeId,
+    } = req.body;
+
+    const netPay = salary + overtime - deductions;
+
+    const payroll = await Payroll.create({
+      employeeId,
+      salary,
+      overtime,
+      deductions,
+      netPay,
+      paymentDate,
+    });
+
     res.status(201).json(payroll);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -13,6 +31,19 @@ exports.getPayroll = async (req, res) => {
   try {
     const payroll = await Payroll.findById(req.params.id);
     if (!payroll) return res.status(404).json({ error: "Payroll not found" });
+    res.status(200).json(payroll);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+exports.getPayrollByEmployee = async (req, res) => {
+  try {
+    const payroll = await Payroll.find({ employeeId: req.params.employeeId });
+    if (!payroll)
+      return res
+        .status(404)
+        .json({ error: "Payroll not found by employee id" });
     res.status(200).json(payroll);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -30,10 +61,21 @@ exports.getAllPayrolls = async (req, res) => {
 
 exports.updatePayroll = async (req, res) => {
   try {
-    const payroll = await Payroll.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!payroll) return res.status(404).json({ error: "Payroll not found" });
+    const { salary, overtime, deductions } = req.body;
+
+    const payroll = await Payroll.findById(req.params.id);
+    if (!payroll) {
+      return res.status(404).json({ error: "Payroll not found" });
+    }
+
+    payroll.salary = salary ?? payroll.salary;
+    payroll.overtime = overtime ?? payroll.overtime;
+    payroll.deductions = deductions ?? payroll.deductions;
+
+    payroll.netPay = payroll.salary + payroll.overtime - payroll.deductions;
+
+    await payroll.save();
+
     res.status(200).json(payroll);
   } catch (err) {
     res.status(400).json({ error: err.message });

@@ -4,38 +4,57 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
-const userSchema = new Schema({
-  userId: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  confirmPassword: {
-    type: String,
-    required: true,
-    validate: {
-      validator: function (val) {
-        return val == this.password;
+const userSchema = new Schema(
+  {
+    userId: { type: String, required: true, unique: true },
+    password: { type: String, required: true, select: false },
+    confirmPassword: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function (val) {
+          return this.isNew || this.isModified("password")
+            ? val === this.password
+            : true;
+        },
+        message: "Password & Confirm Password does not match",
       },
-      message: "Password & Confirm Password does not match",
     },
+    name: { type: String, required: true },
+    role: { type: Schema.Types.ObjectId, ref: "Role", required: true },
+    salary: { type: Number, required: true },
+    joiningDate: { type: Date, required: true },
+    isResigned: { type: Boolean, default: false },
+    resignedDate: { type: Date },
+    qidNumber: { type: String, required: true },
+    dateOfBirth: { type: Date, required: true },
+    contactNumber: { type: String, required: true },
+    familyContactNumber: { type: String },
+    nationality: { type: String, required: true },
+    warningLetterCount: { type: Number, default: 0 },
+    healthcardStartDate: { type: Date },
+    healthcardNumber: { type: String },
+    FHCStartDate: { type: Date }, //foodHandlerCertificateStartDate
+    passwordChangedAt: Date,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
+    isUserDeleted: { type: Boolean, default: false },
   },
-  name: { type: String, required: true },
-  role: { type: Schema.Types.ObjectId, ref: "Role", required: true },
-  salary: { type: Number, required: true },
-  joiningDate: { type: Date, required: true },
-  isResigned: { type: Boolean, default: false },
-  resignedDate: { type: Date },
-  qidNumber: { type: String, required: true },
-  dateOfBirth: { type: Date, required: true },
-  contactNumber: { type: String, required: true },
-  familyContactNumber: { type: String },
-  nationality: { type: String, required: true },
-  warningLetterCount: { type: Number, default: 0 },
-  healthcardStartDate: { type: Date },
-  healthcardNumber: { type: String },
-  FHCStartDate: { type: Date }, //foodHandlerCertificateStartDate
-  passwordChangedAt: Date,
-  resetPasswordToken: String,
-  resetPasswordExpires: Date,
-  isUserDeleted: { type: Boolean, default: false },
+  {
+    timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
+  }
+);
+
+// Pre-save hook for password hashing
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next(); // Skip hashing if password is not modified
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  this.confirmPassword = undefined; // Prevent saving confirmPassword to DB
+  next();
 });
 
 // jwt token
@@ -70,5 +89,13 @@ userSchema.methods.getResetToken = function () {
 
   return resetToken;
 };
+
+// Middleware to update `passwordChangedAt` field
+userSchema.pre("save", function (next) {
+  if (this.isModified("password") && !this.isNew) {
+    this.passwordChangedAt = Date.now() - 1000; // Ensure token issuance is after password change
+  }
+  next();
+});
 
 module.exports = mongoose.model("User", userSchema);

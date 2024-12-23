@@ -1,3 +1,6 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
 const shiftScheduleSchema = new Schema({
   employeeId: { type: String, required: true, ref: "User" },
   shiftId: { type: String, required: true, ref: "Shift" },

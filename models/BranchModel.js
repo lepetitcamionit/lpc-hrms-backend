@@ -1,3 +1,6 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
 const branchSchema = new Schema({
   branchId: { type: String, required: true, unique: true },
   name: { type: String, required: true },

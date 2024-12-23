@@ -1,3 +1,6 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
 const attendanceSchema = new Schema({
   employeeId: { type: String, required: true, ref: "User" },
   date: { type: Date, required: true },

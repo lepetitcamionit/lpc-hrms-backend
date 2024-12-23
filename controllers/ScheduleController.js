@@ -20,6 +20,21 @@ exports.getShiftSchedule = async (req, res) => {
   }
 };
 
+exports.getShiftScheduleByEmployee = async (req, res) => {
+  try {
+    const shiftSchedule = await ShiftSchedule.find({
+      employeeId: req.params.employeeId,
+    });
+    if (!shiftSchedule)
+      return res
+        .status(404)
+        .json({ error: "ShiftSchedule not found by employee id" });
+    res.status(200).json(shiftSchedule);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 exports.getAllShiftSchedules = async (req, res) => {
   try {
     const shiftSchedules = await ShiftSchedule.find();

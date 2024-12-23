@@ -20,6 +20,21 @@ exports.getAttendance = async (req, res) => {
   }
 };
 
+exports.getAttendaceByEmployee = async (req, res) => {
+  try {
+    const attendance = await Attendance.find({
+      employeeId: req.params.employeeId,
+    });
+    if (!attendance)
+      return res
+        .status(404)
+        .json({ error: "Attendance not found for this employee id" });
+    res.status(200).json(attendance);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 exports.getAllAttendances = async (req, res) => {
   try {
     const attendances = await Attendance.find();
