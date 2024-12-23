@@ -1,4 +1,6 @@
 const express = require("express");
+const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
+
 const {
   createLeave,
   getLeave,
@@ -9,10 +11,25 @@ const {
 
 const router = express.Router();
 
-router.post("/", createLeave);
-router.get("/:id", getLeave);
-router.get("/", getAllLeaves);
-router.patch("/:id", updateLeave);
-router.delete("/:id", deleteLeave);
+router.post("/", isAuthenticatedUser, createLeave);
+router.get("/:id", isAuthenticatedUser, getLeave);
+router.get(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  getAllLeaves
+);
+router.patch(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  updateLeave
+);
+router.delete(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner"),
+  deleteLeave
+);
 
 module.exports = router;

@@ -1,4 +1,6 @@
 const express = require("express");
+const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
+
 const {
   createTraining,
   getTraining,
@@ -9,10 +11,35 @@ const {
 
 const router = express.Router();
 
-router.post("/", createTraining);
-router.get("/:id", getTraining);
-router.get("/", getAllTrainings);
-router.patch("/:id", updateTraining);
-router.delete("/:id", deleteTraining);
+router.post(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  createTraining
+);
+router.get(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  getTraining
+);
+router.get(
+  "/",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  getAllTrainings
+);
+router.patch(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  updateTraining
+);
+router.delete(
+  "/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  deleteTraining
+);
 
 module.exports = router;

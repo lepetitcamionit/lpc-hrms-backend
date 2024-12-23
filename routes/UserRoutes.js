@@ -7,7 +7,7 @@ router.post("/", userController.createUser);
 
 router.get(
   "/admin",
-  // isAuthenticatedUser,
+  isAuthenticatedUser,
   // authorizeRoles("admin"),
   userController.getAllUsers
 );
