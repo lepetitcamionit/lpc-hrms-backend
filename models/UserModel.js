@@ -6,7 +6,7 @@ const crypto = require("crypto");
 
 const userSchema = new Schema(
   {
-    userId: { type: String, required: true, unique: true },
+    userId: { type: String, required: true },
     password: { type: String, required: true, select: false },
     confirmPassword: {
       type: String,

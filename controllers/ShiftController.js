@@ -2,6 +2,13 @@ const Shift = require("../models/ShiftModel");
 
 exports.createShift = async (req, res) => {
   try {
+    const existingShift = await Shift.findOne({ shiftId: req.body.shiftId });
+    if (existingShift) {
+      return res
+        .status(400)
+        .json({ error: "Shift with this shiftId already exists" });
+    }
+
     const shift = await Shift.create(req.body);
     res.status(201).json(shift);
   } catch (err) {
