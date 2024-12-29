@@ -2,6 +2,13 @@ const Role = require("../models/RoleModel");
 
 exports.createRole = async (req, res) => {
   try {
+    const existingRole = await Role.findOne({ roleId: req.body.roleId });
+    if (existingRole) {
+      return res
+        .status(400)
+        .json({ error: "Role with this roleId already exists" });
+    }
+
     const role = await Role.create(req.body);
     res.status(201).json(role);
   } catch (err) {

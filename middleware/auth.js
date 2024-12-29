@@ -14,7 +14,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
 
   try {
     const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.user = await User.findById(decodedData.id);
+    req.user = await User.findById(decodedData.id).populate("role");
 
     if (!req.user || req.user.isUserDeleted) {
       return next(new ErrorHandler("User not found", 404));
@@ -26,12 +26,14 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-// Admin Roles
 exports.authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!req.user || !req.user.role || !roles.includes(req.user.role.roleId)) {
       return next(
-        new ErrorHandler(`${req.user.role} cannot access this resource`, 403)
+        new ErrorHandler(
+          `${req.user?.role?.roleId || "User"} cannot access this resource`,
+          403
+        )
       );
     }
     next();
