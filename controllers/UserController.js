@@ -9,10 +9,10 @@ const jwt = require("jsonwebtoken");
 // Create new user
 exports.createUser = async (req, res) => {
   try {
-    const existingUser = await User.findOne({ email: req.body.email });
+    const existingUser = await User.findOne({ userId: req.body.userId });
 
     if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
+      return res.status(400).json({ message: "userId already exists" });
     } else {
       const newUser = new User(req.body);
       await newUser.save();

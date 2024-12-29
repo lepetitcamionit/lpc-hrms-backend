@@ -2,6 +2,15 @@ const Branch = require("../models/BranchModel");
 
 exports.createBranch = async (req, res) => {
   try {
+    const existingBranch = await Branch.findOne({
+      branchId: req.body.branchId,
+    });
+    if (existingBranch) {
+      return res
+        .status(400)
+        .json({ error: "Branch with this branchId already exists" });
+    }
+
     const branch = await Branch.create(req.body);
     res.status(201).json(branch);
   } catch (err) {
