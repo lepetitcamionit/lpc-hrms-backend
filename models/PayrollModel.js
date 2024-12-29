@@ -11,3 +11,5 @@ const payrollSchema = new Schema({
 });
 
 module.exports = mongoose.model("Payroll", payrollSchema);
+
+// increment, performance appraisal (yearly increasing amount/ yearly marit increase / annual increase)
