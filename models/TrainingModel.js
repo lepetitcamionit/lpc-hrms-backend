@@ -7,6 +7,7 @@ const trainingSchema = new Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date },
   trainer: { type: String, required: true },
+  place: { type: String, required: true },
   status: {
     type: String,
     enum: ["completed", "in progress", "upcoming"],

@@ -47,6 +47,14 @@ exports.updateRole = async (req, res) => {
   }
 };
 
+exports.softDeleteRole = async (req, res) => {
+  try {
+    //need to implement
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 exports.deleteRole = async (req, res) => {
   try {
     const role = await Role.findByIdAndDelete(req.params.id);

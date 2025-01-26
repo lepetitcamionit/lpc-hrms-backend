@@ -6,6 +6,7 @@ const {
   getRole,
   getAllRoles,
   updateRole,
+  softDeleteRole,
   deleteRole,
 } = require("../controllers/RoleController");
 
@@ -19,14 +20,12 @@ router.post(
 );
 router.get(
   "/:id",
-  isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
+  // isAuthenticatedUser,
   getRole
 );
 router.get(
   "/",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
   getAllRoles
 );
 router.patch(
@@ -35,6 +34,12 @@ router.patch(
   authorizeRoles("admin", "manager", "owner"),
   updateRole
 );
+
+// router.patch(
+
+//  // softDeleteRole
+// );
+
 router.delete(
   "/:id",
   isAuthenticatedUser,
