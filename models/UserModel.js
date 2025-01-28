@@ -7,7 +7,7 @@ const crypto = require("crypto");
 const userSchema = new Schema(
   {
     userId: { type: String, required: true },
-    password: { type: String, required: true, select: false },
+    password: { type: String, required: true },
     confirmPassword: {
       type: String,
       required: true,
@@ -37,9 +37,9 @@ const userSchema = new Schema(
     healthcardStartDate: { type: Date },
     healthcardNumber: { type: String },
     FHCStartDate: { type: Date }, //foodHandlerCertificateStartDate
-    passwordChangedAt: Date,
-    resetPasswordToken: String,
-    resetPasswordExpires: Date,
+    passwordChangedAt: { type: Date },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
     isUserDeleted: { type: Boolean, default: false },
   },
   {
