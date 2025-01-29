@@ -28,7 +28,6 @@ router.get(
 router.patch(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
   updateAttendance
 );
 router.delete(
