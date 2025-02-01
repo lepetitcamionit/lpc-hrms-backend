@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
 
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
-  const { token } = req.cookies;
+  // const { token } = req.cookies;
+  const token = req.headers.authorization?.split(" ")[1];
 
   console.log("Token:", token);
 
@@ -14,7 +15,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
 
   try {
     const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.user = await User.findById(decodedData.id).populate("role");
+    req.user = await User.findById(decodedData.id);
 
     if (!req.user || req.user.isUserDeleted) {
       return next(new ErrorHandler("User not found", 404));
@@ -27,15 +28,27 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.authorizeRoles = (...roles) => {
-  return (req, res, next) => {
-    if (!req.user || !req.user.role || !roles.includes(req.user.role.roleId)) {
-      return next(
-        new ErrorHandler(
-          `${req.user?.role?.roleId || "User"} cannot access this resource`,
-          403
-        )
-      );
+  return async (req, res, next) => {
+    if (!req.user || !req.user.role) {
+      return next(new ErrorHandler("Role not found", 403));
     }
-    next();
+
+    try {
+      const role = req.user.role;
+
+      if (!role) {
+        return next(new ErrorHandler("Role not found", 404));
+      }
+
+      if (!roles.includes(role)) {
+        return next(
+          new ErrorHandler(`${role} cannot access this resource`, 403)
+        );
+      }
+
+      next();
+    } catch (error) {
+      return next(new ErrorHandler("Role check failed", 500));
+    }
   };
 };

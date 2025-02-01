@@ -6,6 +6,7 @@ const notificationSchema = new Schema({
   employeeId: { type: String, ref: "User", required: true },
   timestamp: { type: Date, default: Date.now },
   readStatus: { type: Boolean, default: false },
+  hidden: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model("Notification", notificationSchema);

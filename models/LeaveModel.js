@@ -6,7 +6,17 @@ const leaveSchema = new Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   type: { type: String, enum: ["annual", "sick", "emergency", "unpaid", "maternity", "marriage", "casual", "optionalDays", "probationaryPeriod", "hajj", "visaRun"], required: true },
-  status: {
+  supervisorApprovalStatus: {
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
+  },
+  managerApprovalStatus: {
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
+  },
+  hrApprovalStatus: {
     type: String,
     enum: ["pending", "approved", "rejected"],
     default: "pending",
