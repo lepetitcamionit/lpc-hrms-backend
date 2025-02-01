@@ -21,7 +21,7 @@ const userSchema = new Schema(
       },
     },
     name: { type: String, required: true },
-    role: { type: Schema.Types.ObjectId, ref: "Role", required: true },
+    role: { type: String, required: true },
     salary: { type: Number },
     passportNumber: { type: String },
     qidNumber: { type: String },

@@ -158,7 +158,7 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({ isUserDeleted: false }).populate("role");
+    const users = await User.find({ isUserDeleted: false });
 
     // If no users found, return 204 No Content
     if (users.length === 0) {

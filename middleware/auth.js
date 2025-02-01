@@ -2,7 +2,6 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("./catchAsyncErrors");
 const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
-const Role = require("../models/RoleModel");
 
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   // const { token } = req.cookies;
@@ -16,7 +15,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
 
   try {
     const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.user = await User.findById(decodedData.id).populate("role");
+    req.user = await User.findById(decodedData.id);
 
     if (!req.user || req.user.isUserDeleted) {
       return next(new ErrorHandler("User not found", 404));
@@ -35,17 +34,15 @@ exports.authorizeRoles = (...roles) => {
     }
 
     try {
-      const role = await Role.findById(req.user.role);
+      const role = req.user.role;
 
       if (!role) {
         return next(new ErrorHandler("Role not found", 404));
       }
 
-      const roleName = role.roleId;
-
-      if (!roles.includes(roleName)) {
+      if (!roles.includes(role)) {
         return next(
-          new ErrorHandler(`${roleName} cannot access this resource`, 403)
+          new ErrorHandler(`${role} cannot access this resource`, 403)
         );
       }
 
