@@ -6,12 +6,11 @@ const fileUpload = require("express-fileupload");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-
 app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:4000",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );

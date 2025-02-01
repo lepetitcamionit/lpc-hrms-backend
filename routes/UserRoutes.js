@@ -8,7 +8,7 @@ router.post("/", userController.createUser);
 router.get(
   "/admin",
   isAuthenticatedUser,
-  // authorizeRoles("admin"),
+  authorizeRoles("admin", "manager", "owner", "HR"),
   userController.getAllUsers
 );
 
@@ -22,9 +22,9 @@ router.patch("/password/reset/:token", userController.resetPassword);
 
 router.get("/:id", isAuthenticatedUser, userController.getUserById);
 
-router.patch("/:id", isAuthenticatedUser, userController.updateUser);
+router.patch("/:id", isAuthenticatedUser, authorizeRoles("admin", "manager", "owner", "HR"), userController.updateUser);
 
-router.patch("/soft-delete/:id", userController.softDeleteUser);
+router.patch("/soft-delete/:id", isAuthenticatedUser, authorizeRoles("admin", "manager", "owner", "HR"), userController.softDeleteUser);
 
 router.get("/auth/session", isAuthenticatedUser, userController.getSession);
 
