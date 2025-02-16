@@ -7,11 +7,12 @@ const {
   getAllLeaves,
   updateLeave,
   deleteLeave,
+  uploadFile
 } = require("../controllers/LeaveController");
 
 const router = express.Router();
 
-router.post("/", isAuthenticatedUser, createLeave);
+router.post("/", isAuthenticatedUser, uploadFile, createLeave);
 router.get("/:id", isAuthenticatedUser, getLeave);
 router.get(
   "/",

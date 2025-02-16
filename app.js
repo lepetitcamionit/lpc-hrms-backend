@@ -6,6 +6,19 @@ const fileUpload = require("express-fileupload");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
 app.use(express.json());
 
 app.use(
@@ -14,6 +27,10 @@ app.use(
     credentials: true,
   })
 );
+
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  res.json(req.file);
+});
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
