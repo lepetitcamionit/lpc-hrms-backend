@@ -2,7 +2,6 @@ const User = require("../models/UserModel");
 const ErrorHandler = require("../utils/ErrorHandler.js");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken.js");
-const crypto = require("crypto");
 const sendMail = require("../utils/sendMail.js");
 const jwt = require("jsonwebtoken");
 
@@ -31,7 +30,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Please enter the userId & password", 400));
   }
 
-  const user = await User.findOne({ userId }).select("+password");
+  const user = await User.findOne({ userId, password });
 
   if (!user) {
     return next(
@@ -41,17 +40,6 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
   if (user.isUserDeleted) {
     return next(new ErrorHandler("This user account is deactivated.", 403));
-  }
-
-  const isPasswordMatched = await user.comparePassword(password);
-
-  if (!isPasswordMatched) {
-    return next(
-      new ErrorHandler(
-        "User is not find with this userId address & password",
-        400
-      )
-    );
   }
 
   sendToken(user, 201, res);
@@ -68,91 +56,6 @@ exports.logoutUser = catchAsyncErrors(async (req, res, next) => {
     success: true,
     message: "Log out success",
   });
-});
-
-// Forgot Password
-exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
-
-  if (!user) {
-    return next(
-      new ErrorHandler("User is not found with this email address", 400)
-    );
-  }
-
-  const resetToken = user.getResetToken();
-
-  await user.save({ validateBeforeSave: false });
-
-  const resetUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/v1/user/password/reset/${resetToken}`;
-  const message = `We have received a password reset request. Please use the below link to reset your password\n\n${resetUrl}\n\nThis Reset Passoword link is only valid for 10 minutes\n\nLe Petit Camion`;
-  try {
-    await sendMail({
-      email: user.email,
-      subject: "Password Reset Link - Le Petit Camion Website",
-      message: message,
-    });
-
-    res.status(200).json({
-      success: true,
-      message: "Email sent to your inbox",
-    });
-  } catch (err) {
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-    user.save({ validateBeforeSave: false });
-
-    return next(
-      new ErrorHandler(
-        "There was an error sending password reset email. Please try again later",
-        500
-      )
-    );
-  }
-});
-
-// Reset Password
-exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
-  const token = crypto
-    .createHash("sha256")
-    .update(req.params.token)
-    .digest("hex");
-  const user = await User.findOne({
-    resetPasswordToken: token,
-    resetPasswordExpires: { $gt: Date.now() },
-  });
-
-  if (!user) {
-    return next(new ErrorHandler("Token is invalid or expired", 400));
-  }
-
-  const { password, confirmPassword } = req.body;
-
-  // Check if password and confirmPassword are provided
-  if (!password || !confirmPassword) {
-    return next(
-      new ErrorHandler("Password and confirm password fields are required", 400)
-    );
-  }
-
-  // Check if password and confirmPassword match
-  if (password !== confirmPassword) {
-    return next(
-      new ErrorHandler("Password and confirm password do not match", 400)
-    );
-  }
-
-  user.password = req.body.password;
-  user.confirmPassword = req.body.confirmPassword;
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpires = undefined;
-  user.passwordChangedAt = Date.now();
-
-  user.save();
-
-  sendToken(user, 201, res);
 });
 
 // Get all users

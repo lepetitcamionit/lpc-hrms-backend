@@ -22,7 +22,7 @@ router.get(
 router.get(
   "/",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
+  authorizeRoles("admin", "manager", "owner", "accountant"),
   getAllAttendances
 );
 router.patch(

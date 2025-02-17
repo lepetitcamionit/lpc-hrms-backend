@@ -3,7 +3,12 @@ const router = express.Router();
 const userController = require("../controllers/UserController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
-router.post("/", userController.createUser);
+router.post(
+  "/",
+  // isAuthenticatedUser,
+  // authorizeRoles("admin", "manager", "owner", "HR"),
+  userController.createUser
+);
 
 router.get(
   "/admin",
@@ -16,15 +21,20 @@ router.post("/login", userController.loginUser);
 
 router.get("/logout", userController.logoutUser);
 
-router.post("/password/forgot", userController.forgotPassword);
-
-router.patch("/password/reset/:token", userController.resetPassword);
-
 router.get("/:id", isAuthenticatedUser, userController.getUserById);
 
-router.patch("/:id", isAuthenticatedUser, authorizeRoles("admin", "manager", "owner", "HR"), userController.updateUser);
+router.patch(
+  "/:id",
+  isAuthenticatedUser,
+  userController.updateUser
+);
 
-router.patch("/soft-delete/:id", isAuthenticatedUser, authorizeRoles("admin", "manager", "owner", "HR"), userController.softDeleteUser);
+router.patch(
+  "/soft-delete/:id",
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner", "HR"),
+  userController.softDeleteUser
+);
 
 router.get("/auth/session", isAuthenticatedUser, userController.getSession);
 
