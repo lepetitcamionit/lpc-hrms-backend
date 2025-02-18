@@ -2,7 +2,6 @@ const User = require("../models/UserModel");
 const ErrorHandler = require("../utils/ErrorHandler.js");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken.js");
-const sendMail = require("../utils/sendMail.js");
 const jwt = require("jsonwebtoken");
 
 // Create new user
