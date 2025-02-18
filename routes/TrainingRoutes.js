@@ -14,31 +14,29 @@ const router = express.Router();
 router.post(
   "/",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
   createTraining
 );
 router.get(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
   getTraining
 );
 router.get(
   "/",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
   getAllTrainings
 );
 router.patch(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
   updateTraining
 );
 router.delete(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
   deleteTraining
 );
 

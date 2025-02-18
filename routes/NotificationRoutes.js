@@ -14,7 +14,7 @@ const router = express.Router();
 router.post(
   "/",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
+  authorizeRoles("admin", "manager", "owner", "HR"),
   createNotification
 );
 router.get("/:id", isAuthenticatedUser, getNotification);
@@ -22,13 +22,13 @@ router.get("/", isAuthenticatedUser, getAllNotifications);
 router.patch(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
+  authorizeRoles("admin", "manager", "owner", "HR"),
   updateNotification
 );
 router.delete(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
+  authorizeRoles("admin", "manager", "owner", "HR"),
   deleteNotification
 );
 

@@ -5,8 +5,8 @@ const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 router.post(
   "/",
-  // isAuthenticatedUser,
-  // authorizeRoles("admin", "manager", "owner", "HR"),
+  isAuthenticatedUser,
+  authorizeRoles("admin", "manager", "owner", "HR"),
   userController.createUser
 );
 
