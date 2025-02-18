@@ -16,19 +16,19 @@ router.get("/:id", isAuthenticatedUser, getLeave);
 router.get(
   "/",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
+  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
   getAllLeaves
 );
 router.patch(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
+  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
   updateLeave
 );
 router.delete(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
+  authorizeRoles("admin"),
   deleteLeave
 );
 

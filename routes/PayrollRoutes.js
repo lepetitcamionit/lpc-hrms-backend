@@ -21,14 +21,13 @@ router.post(
 router.get(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "accountant"),
   getPayroll
 );
 router.get("/employee/:employeeId", isAuthenticatedUser, getPayrollByEmployee);
 router.get(
   "/",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "accountant"),
+  authorizeRoles("admin", "manager", "owner", "accountant", "HR"),
   getAllPayrolls
 );
 router.patch(
