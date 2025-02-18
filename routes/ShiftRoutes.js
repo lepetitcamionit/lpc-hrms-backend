@@ -20,13 +20,13 @@ router.post(
 router.get(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
+  authorizeRoles("admin", "manager", "owner", "accountant", "supervisor", "HR"),
   getShift
 );
 router.get(
   "/",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
+  authorizeRoles("admin", "manager", "owner", "accountant", "supervisor", "HR"),
   getAllShifts
 );
 router.patch(
