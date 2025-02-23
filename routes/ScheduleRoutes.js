@@ -15,37 +15,26 @@ const router = express.Router();
 router.post(
   "/",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
   createShiftSchedule
 );
-router.get(
-  "/:id",
-  isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
-  getShiftSchedule
-);
+router.get("/:id", isAuthenticatedUser, getShiftSchedule);
 router.get(
   "/employee/:employeeId",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
   getShiftScheduleByEmployee
 );
-router.get(
-  "/",
-  isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
-  getAllShiftSchedules
-);
+router.get("/", isAuthenticatedUser, getAllShiftSchedules);
 router.patch(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner", "supervisor"),
+  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
   updateShiftSchedule
 );
 router.delete(
   "/:id",
   isAuthenticatedUser,
-  authorizeRoles("admin", "manager", "owner"),
+  authorizeRoles("admin", "manager", "owner", "supervisor", "HR"),
   deleteShiftSchedule
 );
 
