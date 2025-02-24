@@ -11,7 +11,7 @@ const trainingSchema = new Schema({
   status: {
     type: String,
     enum: ["completed", "in progress", "upcoming"],
-    required: true,
+    default: "upcoming",
   },
 });
 
